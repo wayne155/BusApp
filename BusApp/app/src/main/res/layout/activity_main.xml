@@ -102,10 +102,11 @@
             android:theme="@style/EditScreenTextInputLayoutStyle">
 
             <EditText
+                android:id="@+id/phoneText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:drawablePadding="16dp"
                 android:drawableRight="@drawable/ic_phone_android_black_24dp"
+                android:drawablePadding="16dp"
                 android:fontFamily="@font/calibri"
                 android:hint="Phone"
                 android:inputType="textEmailAddress"
@@ -130,8 +131,9 @@
                     android:theme="@style/EditScreenTextInputLayoutStyle">
 
                     <EditText
-                        android:layout_width="match_parent"
+                        android:id="@+id/verifyCodeText"
 
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:drawableRight="@drawable/ic_lock_white_24dp"
                         android:fontFamily="@font/calibri"
@@ -144,6 +146,7 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
                 <Button
+                    android:id="@+id/sendCodeButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -153,7 +156,7 @@
                     android:layout_gravity="bottom"
 
                     android:textColor="#96ffffff"
-                    android:textSize="16dp"
+                    android:textSize="14dp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -179,19 +182,25 @@
 <!--                android:textColor="#96ffffff"-->
 <!--                android:textSize="16dp" />-->
 
+
+
             <Button
                 android:id="@+id/signInButton"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:background="@drawable/buttonshapewhitebg"
+                android:layout_weight="1"
                 android:fontFamily="@font/calibri"
-                android:text="Sign in"
+                android:text="登陆"
                 android:textAllCaps="false"
+                android:layout_gravity="bottom"
                 android:textColor="#96ffffff"
-                android:textSize="16dp"
+                android:shadowColor="@color/colorAccent"
+                android:outlineSpotShadowColor="@color/colorAccent"
+                android:outlineAmbientShadowColor="@color/colorAccent"
+                android:textColorLink="@color/colorAccent"
+                android:contextClickable="true"
+                android:textSize="26dp"
                 android:textStyle="bold" />
-
 
         </LinearLayout>
 

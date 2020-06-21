@@ -11,5 +11,7 @@ object Settings {
     var verifyCode:String by Preferences(AppContext, "verifyCode", "", "user")
 
 
+    //剩余时间
+//    var codeTime:String by Preferences(AppContext, "codeTime", "", "user")
 
 }
