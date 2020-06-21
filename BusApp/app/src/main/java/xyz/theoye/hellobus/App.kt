@@ -1,4 +1,4 @@
-package xyz.theoye.mygithub
+package xyz.theoye.hellobus
 
 import android.app.Application
 import android.content.ContextWrapper

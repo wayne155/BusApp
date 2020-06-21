@@ -40,7 +40,7 @@
                 android:fontFamily="@font/gotham"
                 android:text="Hello"
                 android:textColor="#ffffff"
-                android:textSize="32sp" />
+                android:textSize="40sp" />
 
         </LinearLayout>
 
@@ -58,7 +58,7 @@
                 android:fontFamily="@font/gotham"
                 android:text="Bus"
                 android:textColor="#ffffff"
-                android:textSize="32sp" />
+                android:textSize="40sp" />
 
             <View
                 android:layout_width="match_parent"
@@ -81,7 +81,7 @@
         android:gravity="center"
         android:text="从未有过的公交体验!!!"
         android:textColor="#9affffff"
-        android:textSize="10sp" />
+        android:textSize="14sp" />
 
 
     <LinearLayout
@@ -166,19 +166,21 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="16dp"
-                android:background="@drawable/buttonshapewhitebg"
-                android:fontFamily="@font/calibri"
-                android:text="Sign up"
-                android:textAllCaps="false"
-                android:textStyle="bold"
-                android:textColor="#96ffffff"
-                android:textSize="16dp" />
+<!--            <Button-->
+
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginRight="16dp"-->
+<!--                android:background="@drawable/buttonshapewhitebg"-->
+<!--                android:fontFamily="@font/calibri"-->
+<!--                android:text="Sign up"-->
+<!--                android:textAllCaps="false"-->
+<!--                android:textStyle="bold"-->
+<!--                android:textColor="#96ffffff"-->
+<!--                android:textSize="16dp" />-->
 
             <Button
+                android:id="@+id/signInButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
