@@ -114,24 +114,49 @@
                 android:textSize="16sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColorHint="#96ffffff"
-            android:theme="@style/EditScreenTextInputLayoutStyle">
 
-            <EditText
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawablePadding="16dp"
-                android:drawableRight="@drawable/ic_lock_white_24dp"
-                android:fontFamily="@font/calibri"
-                android:hint="Password"
-                android:inputType="textPassword"
-                android:maxLines="1"
-                android:textColor="@android:color/white"
-                android:textSize="16sp" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_gravity="center_horizontal"
+
+                    android:layout_height="wrap_content"
+                    android:textColorHint="#96ffffff"
+                    android:theme="@style/EditScreenTextInputLayoutStyle">
+
+                    <EditText
+                        android:layout_width="match_parent"
+
+                        android:layout_height="match_parent"
+                        android:drawableRight="@drawable/ic_lock_white_24dp"
+                        android:fontFamily="@font/calibri"
+                        android:hint="VerifyCode"
+                        android:inputType="textPassword"
+                        android:maxLines="1"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+
+
+                </com.google.android.material.textfield.TextInputLayout>
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/calibri"
+                    android:text="发送验证码"
+                    android:textAllCaps="false"
+                    android:layout_gravity="bottom"
+
+                    android:textColor="#96ffffff"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
