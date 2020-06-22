@@ -19,9 +19,17 @@ import kotlin.coroutines.suspendCoroutine
 
 object BusAppNetwork {
     private  val LOG_TAG = "BusAppNetwork"
-    private val userLoginService = ServiceCreator.create(UserLoginService::class.java)
+    private val userLoginService = ServiceCreator.codeCreate(UserLoginService::class.java)
+    private val searchPlaceService = ServiceCreator.cityCreate(PlaceService::class.java)
 
+
+    //将函数挂起
+    // 请求验证码
     suspend fun requestVerifycode(data: VerifyCodeRequest) = userLoginService.sendCodeRequest(data).await()
+    // 请求城市数据接口
+    suspend fun searchPlaces(query:String) = searchPlaceService.serachPlaces(query).await()
+
+
 
     private suspend fun <T> Call<T>.await():T{
         return suspendCoroutine { continuation->
@@ -42,6 +50,12 @@ object BusAppNetwork {
             })
         }
     }
+
+
+
+
+
+
 
 
 }
