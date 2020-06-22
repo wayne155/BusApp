@@ -14,7 +14,6 @@ class BusApp:Application(){
         INSTANCE = this
     }
 
-
     companion object{
         const val CODE_APIKEY = "9821fcca86fd96b280ea7f87dbba701c"  //验证码apikey
         const val CODE_URL = "http://api01.monyun.cn:7901/"  //验证码服务器地址

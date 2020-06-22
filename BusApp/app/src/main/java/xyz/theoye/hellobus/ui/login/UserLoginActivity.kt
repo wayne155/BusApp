@@ -47,9 +47,12 @@ class UserLoginActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this).get(UserLoginViewModel::class.java)
 
         signInButton.setOnClickListener {
-            Log.d("signInBButton",Settings.verifyCode.toString()
-            )
-            if(verifyCodeText.text.equals(Settings.verifyCode)){
+            if(verifyCodeText.text.length!=6){
+            Toast.makeText(this, "请输入6位的验证码", Toast.LENGTH_SHORT).show()
+            return@setOnClickListener
+        }
+
+            if(verifyCodeText.text.toString().equals(Settings.verifyCode)){
                 Toast.makeText(this, "登陆成功", Toast.LENGTH_LONG).show()
                 val i = Intent(this, MapActivity::class.java)
                 startActivity(i)
@@ -69,6 +72,14 @@ class UserLoginActivity : AppCompatActivity() {
         })
 
         sendCodeButton .setOnClickListener{
+            //检查文本
+            if(phoneText.text.length!=11){
+                Toast.makeText(this , "请输入正确的手机号码", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+
+            //检查是否为可发送状态
             if(viewModel.codeStatus.value == true){
                 //可以发送点击
 
@@ -100,8 +111,7 @@ class UserLoginActivity : AppCompatActivity() {
                 //先写死..TODO()
                 val verifyCodeRequest =VerifyCodeRequest(BusApp.CODE_APIKEY, phoneText.text.toString() ,URLEncoder.encode("验证码：$verifyCode，打死都不要告诉别人哦！", "GBK"))
 
-
-
+                Log.d("UserLoginActivity","choded:"+ URLEncoder.encode("验证码：$verifyCode，打死都不要告诉别人哦！", "GBK"))
 
                 //协程调用
                 GlobalScope.launch{
@@ -114,7 +124,11 @@ class UserLoginActivity : AppCompatActivity() {
                             Log.d("UserLoginActivity", "code:$verifyCode"+"coded:"+URLEncoder.encode("验证码：$verifyCode，打死都不要告诉别人哦！", "GBK"))
                             Log.d("UserLoginActivity", "verifyCodeResponse:${verifyCodeResponse.result}")
 
-                            Settings.verifyCode = verifyCode //存储验证码
+                            Settings.verifyCode = verifyCode.toString() //存储验证码
+
+                            Log.d("UserLoginActivity", "verifycode:$verifyCode Settings.verifyCode:"+Settings.verifyCode)
+
+
                             Result.success(verifyCode)
                         }else{
                             Log.d("UserLoginActivity", "wrogn :code:${verifyCodeResponse.result}")
@@ -122,7 +136,8 @@ class UserLoginActivity : AppCompatActivity() {
                         }
                     }catch (e: Exception){
                         Result.failure<VerifyCodeResponse>(e)
-
+                        Log.d("UserLoginActivity", "Failure::")
+                        e.printStackTrace()
                     }
 
                 }

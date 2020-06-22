@@ -51,9 +51,8 @@ class Preferences<T> (val context: Context, val name:String , val default:T, val
                 is Float->putFloat(key , value)
                 is Boolean -> putBoolean(key , value)
                 else -> throw IllegalArgumentException("Unsurported Type!");
-            }
+            }.apply()
         }
-
     }
 
 }
