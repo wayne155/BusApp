@@ -11,18 +11,18 @@
 
         <FrameLayout
             android:id="@+id/titleLayout"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:fitsSystemWindows="true"
-                android:background="@color/colorPrimaryDark">
-
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:fitsSystemWindows="true">
 
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layout_gravity="center_vertical">
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:gravity="top"
+                android:orientation="horizontal">
 
 
                 <Button
@@ -32,21 +32,25 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="15dp"
                     android:background="@drawable/ic_location_city_black_24dp" />
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@drawable/buttonshapewhitebg"
-                    android:text="添加站点"/>
 
                 <Button
+                    android:id="@+id/addStation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="15dp"
                     android:background="@drawable/buttonshapewhitebg"
-                    android:text="添加路线"/>
+                    android:text="添加站点" />
+
+                <Button
+                    android:id="@+id/addRoute"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="15dp"
+                    android:background="@drawable/buttonshapewhitebg"
+                    android:text="添加路线" />
+
                 <Button
                     android:id="@+id/showMarker"
                     android:layout_width="30dp"
@@ -63,26 +67,26 @@
                     android:layout_marginStart="15dp"
                     android:background="@drawable/ic_delete_forever_black_24dp" />
             </LinearLayout>
+
             <LinearLayout
+                android:id="@+id/nameEditLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:visibility="visible"
+                android:layout_height="match_parent"
+                android:layout_marginTop="60dp">
 
                 <TextView
                     android:layout_width="wrap_content"
+                    android:textSize="20dp"
                     android:layout_height="wrap_content"
-                    android:text="站点名称:"/>
+                    android:text="站点名称:" />
+
                 <EditText
+                    android:id="@+id/editName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
-                    android:singleLine="true"/>
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                    android:singleLine="true" />
             </LinearLayout>
 
 
@@ -93,13 +97,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="15dp"
-                android:background="@drawable/buttonshapewhitebg"
-                android:text="站点编辑:"></Button>
         </com.baidu.mapapi.map.MapView>
 
 

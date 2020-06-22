@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">HelloBus</string>
     <string name="title_activity_login">Sign in</string>
+    <string name="confirm">确定</string>
+    <string name="cancle">取消</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
