@@ -25,7 +25,6 @@ class BusApp:Application(){
         const val CODE_TEXT_SUFFIX = "，打死都不要告诉别人哦！"
 
     }
-
 }
 
-object  AppContext:ContextWrapper(INSTANCE);
+object  AppContext:ContextWrapper(INSTANCE)

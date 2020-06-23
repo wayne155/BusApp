@@ -4,6 +4,10 @@ package xyz.theoye.hellobus;
         import android.app.AlertDialog;
         import android.content.Context;
         import android.content.DialogInterface;
+        import android.graphics.Bitmap;
+        import android.graphics.Canvas;
+        import android.graphics.Color;
+        import android.graphics.drawable.Drawable;
         import android.os.Bundle;
         import android.text.Layout;
         import android.view.View;
@@ -13,14 +17,22 @@ package xyz.theoye.hellobus;
         import android.widget.LinearLayout;
         import android.widget.Toast;
 
+        import androidx.annotation.ColorInt;
+        import androidx.annotation.DrawableRes;
         import androidx.annotation.NonNull;
         import androidx.annotation.Nullable;
         import androidx.appcompat.app.AppCompatActivity;
+        import androidx.core.content.res.ResourcesCompat;
+        import androidx.core.graphics.drawable.DrawableCompat;
         import androidx.core.view.GravityCompat;
         import androidx.drawerlayout.widget.DrawerLayout;
         import androidx.lifecycle.Observer;
         import androidx.lifecycle.ViewModelProviders;
 
+        import com.baidu.location.BDAbstractLocationListener;
+        import com.baidu.location.BDLocation;
+        import com.baidu.location.LocationClient;
+        import com.baidu.location.LocationClientOption;
         import com.baidu.mapapi.CoordType;
         import com.baidu.mapapi.SDKInitializer;
         import com.baidu.mapapi.map.BaiduMap;
@@ -28,10 +40,12 @@ package xyz.theoye.hellobus;
         import com.baidu.mapapi.map.BitmapDescriptorFactory;
         import com.baidu.mapapi.map.MapPoi;
         import com.baidu.mapapi.map.MapView;
+        import com.baidu.mapapi.map.Marker;
         import com.baidu.mapapi.map.MarkerOptions;
         import com.baidu.mapapi.map.OverlayOptions;
         import com.baidu.mapapi.model.LatLng;
 
+        import xyz.theoye.hellobus.Util.MyLocationListener;
         import xyz.theoye.hellobus.ui.map.MapViewModel;
 
 public class MapActivity extends AppCompatActivity {
@@ -107,8 +121,23 @@ public class MapActivity extends AppCompatActivity {
 //            }
 //        });
 
+        mLocationClient = new LocationClient(getApplicationContext());
+        //声明LocationClient类
+        mLocationClient.registerLocationListener(myListener);
+        //注册监听函数
+        LocationClientOption option = new LocationClientOption();
 
+        option.setIsNeedAddress(true);
+//可选，是否需要地址信息，默认为不需要，即参数为false
+//如果开发者需要获得当前点的地址信息，此处必须为true
 
+        option.setNeedNewVersionRgc(true);
+//可选，设置是否需要最新版本的地址信息。默认需要，即参数为true
+
+        mLocationClient.setLocOption(option);
+//mLocationClient为第二步初始化过的LocationClient对象
+//需将配置好的LocationClientOption对象，通过setLocOption方法传递给LocationClient对象使用
+//更多LocationClientOption的配置，请参照类参考中LocationClientOption类的详细说明
 
         //注册点击事件
         Button navBtn = findViewById(R.id.navBtn);
@@ -201,7 +230,6 @@ public class MapActivity extends AppCompatActivity {
 
 
 
-
         //事件单击回调
         BaiduMap.OnMapClickListener listener = new BaiduMap.OnMapClickListener() {
             /**
@@ -212,6 +240,34 @@ public class MapActivity extends AppCompatActivity {
             @Override
             public void onMapClick(LatLng point) {
 
+
+                EditText editText = findViewById(R.id.editName);
+                if(editText.getText().toString().equals("")){
+                    Toast.makeText(getApplicationContext(), "请输入名称", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if(viewModel.getEditState().getValue() == EditState.ADD_STATION){
+                    BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.mipmap.bs);
+//                    BitmapDescriptor bitmap = getBitmapDescriptor(R.mipmap.ic_launcher);
+
+//构建MarkerOption，用于在地图上添加Marker
+                    OverlayOptions option = new MarkerOptions()
+                            .position(point)
+                            .icon(bitmap);
+//在地图上添加Marker，并显示
+                    mBaiduMap.addOverlay(option);
+                }else if (editState==EditState.NOTHING){
+
+                }else if(editState == EditState.ADD_BUSROUTE){
+
+                }
+
+
+
+
+
+
             }
             /**
              * 地图内 Poi 单击事件回调函数
@@ -219,28 +275,7 @@ public class MapActivity extends AppCompatActivity {
              */
             @Override
             public void onMapPoiClick(MapPoi mapPoi) {
-                Toast.makeText(getApplicationContext(), "clicked", Toast.LENGTH_SHORT).show();
-                if(editState == EditState.ADD_STATION){
-                    EditText editText = findViewById(R.id.editName);
-                    String msg = "是否在"+mapPoi.getName()+"处"+"添加站点"+editText.getText().toString()+"?";
 
-                    // Use the Builder class for convenient dialog construction
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-                    builder.setMessage(msg)
-                            .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    //确认添加
-                                    addBusStation(mapPoi);
-                                }
-                            })
-                            .setNegativeButton(R.string.cancle, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    //取消添加
-                                }
-                            });
-                    // Create the AlertDialog object and return it
-                    builder.create();
-                }
             }
         };
 
@@ -264,6 +299,7 @@ public class MapActivity extends AppCompatActivity {
     }
 
 
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -283,5 +319,65 @@ public class MapActivity extends AppCompatActivity {
         mMapView.onDestroy();
     }
 
+    public class MyLocationListener extends BDAbstractLocationListener {
+        @Override
+        public void onReceiveLocation(BDLocation location){
 
+            //此处的BDLocation为定位结果信息类，通过它的各种get方法可获取定位相关的全部结果
+            //以下只列举部分获取地址相关的结果信息
+            //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
+
+
+
+            Toast.makeText(getApplicationContext(), "clicked", Toast.LENGTH_SHORT).show();
+            if(editState == EditState.ADD_STATION){
+//                    String msg = "是否在"+mapPoi.getName()+"处"+"添加站点"+editText.getText().toString()+"?";
+
+                // Use the Builder class for convenient dialog construction
+                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                builder.setMessage("")
+                        .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //确认添加
+//                                    addBusStation(mapPoi);
+                            }
+                        })
+                        .setNegativeButton(R.string.cancle, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //取消添加
+                            }
+                        });
+                // Create the AlertDialog object and return it
+                builder.create();
+            }
+
+
+
+
+            String addr = location.getAddrStr();    //获取详细地址信息
+            String country = location.getCountry();    //获取国家
+            String province = location.getProvince();    //获取省份
+            String city = location.getCity();    //获取城市
+            String district = location.getDistrict();    //获取区县
+            String street = location.getStreet();    //获取街道信息
+            String adcode = location.getAdCode();    //获取adcode
+            String town = location.getTown();    //获取乡镇信息
+        }
+    }
+
+
+    /**
+     * Demonstrates converting a {@link Drawable} to a {@link BitmapDescriptor},
+     * for use as a marker icon.
+     */
+//    private BitmapDescriptor getBitmapDescriptor(int id) {
+//        Drawable vectorDrawable =getApplicationContext().getDrawable(id);
+//        int h = ((int) Utils.convertDpToPixel(42, getApplicationContext()));
+//        int w = ((int) Utils.convertDpToPixel(25, getApplicationContext()));
+//        vectorDrawable.setBounds(0, 0, w, h);
+//        Bitmap bm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+//        Canvas canvas = new Canvas(bm);
+//        vectorDrawable.draw(canvas);
+//        return BitmapDescriptorFactory.fromBitmap(bm);
+//    }
 }
