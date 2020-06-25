@@ -70,12 +70,14 @@
 
             <LinearLayout
                 android:id="@+id/nameEditLayout"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:layout_height="match_parent"
                 android:layout_marginTop="60dp">
 
                 <TextView
+                    android:id="@+id/editTextView"
                     android:layout_width="wrap_content"
                     android:textSize="20dp"
                     android:layout_height="wrap_content"
@@ -83,10 +85,19 @@
 
                 <EditText
                     android:id="@+id/editName"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:singleLine="true" />
+
+
+                <Button
+                    android:visibility="gone"
+                    android:id="@+id/finishEditButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="保存路径"/>
             </LinearLayout>
 
 

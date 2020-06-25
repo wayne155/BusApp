@@ -36,8 +36,10 @@ class PlaceAdapter (private val fragment: Fragment, private val placeList: List<
                     //更改地图位置
                     activity.mBaiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(
                        LatLng( place.location.lat.toDouble(), place.location.lng.toDouble())
-                    ))
 
+                    ))
+                    activity.currentCity = place.name
+                    activity.currentAddress = place.address
                 }
             }
         }

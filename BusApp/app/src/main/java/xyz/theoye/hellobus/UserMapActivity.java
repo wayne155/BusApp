@@ -12,6 +12,7 @@ package xyz.theoye.hellobus;
         import android.text.Layout;
         import android.util.Log;
         import android.view.View;
+        import android.view.ViewGroup;
         import android.view.inputmethod.InputMethodManager;
         import android.widget.Button;
         import android.widget.EditText;
@@ -40,6 +41,7 @@ package xyz.theoye.hellobus;
         import com.baidu.mapapi.map.BaiduMap;
         import com.baidu.mapapi.map.BitmapDescriptor;
         import com.baidu.mapapi.map.BitmapDescriptorFactory;
+        import com.baidu.mapapi.map.InfoWindow;
         import com.baidu.mapapi.map.MapPoi;
         import com.baidu.mapapi.map.MapView;
         import com.baidu.mapapi.map.Marker;
@@ -94,6 +96,7 @@ public class MapActivity extends AppCompatActivity {
         DELETE_STATION,//删除站点
         ADD_BUSROUTE, //添加路线
         DELETE,
+        CHECK_INFO,
         DELETE_BUSROUTE, //删除路线
         NOTHING , //未选择任何状态
     }
@@ -175,6 +178,7 @@ public class MapActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 viewModel.toggltShowMarker();
+                viewModel.setEditState(EditState.CHECK_INFO);
             }
         });
 
@@ -241,6 +245,12 @@ public class MapActivity extends AppCompatActivity {
                         finishEditButton.setVisibility(View.GONE);
                         break;
 
+                    case CHECK_INFO:
+                        //TODO() 获取信息
+                        nameEditLayout.setVisibility(View.GONE);
+                        finishEditButton.setVisibility(View.GONE);
+
+                        break;
                     case DELETE:
                         nameEditLayout.setVisibility(View.GONE);
                         finishEditButton.setVisibility(View.GONE);
@@ -350,6 +360,40 @@ public class MapActivity extends AppCompatActivity {
                         builder.create();
                         builder.show();
                         break;
+
+
+                    case CHECK_INFO:
+                        //TODO 查看折线数据
+
+                        InfoWindow mInfoWindow = null;
+
+//用来构造InfoWindow的Button
+                        Button button = new Button(getApplicationContext());
+                        button.setBackgroundResource(R.mipmap.rectangle_popup);
+                        button.setText(polyline.getExtraInfo().getString("name"));
+//构造InfoWindow
+//point 描述的位置点
+//-100 InfoWindow相对于point在y轴的偏移量
+                        LatLng begin = polyline.getPoints().get(0) ;
+                        LatLng end = polyline.getPoints().get(1) ;
+
+                        LatLng center = new LatLng( (begin.latitude + end.latitude)/2 ,  (begin.longitude + end.longitude)/2 );
+
+                        mInfoWindow = new InfoWindow(button, center, -10);
+
+//使InfoWindow生效
+                        mBaiduMap.showInfoWindow(mInfoWindow);
+
+                        button.setOnClickListener(new View.OnClickListener(
+                        ) {
+                            @Override
+                            public void onClick(View v) {
+                                //吧按钮删除
+                                ((ViewGroup)button.getParent()).removeView(button);
+                            }
+                        });
+
+                        break;
                 }
                 return true;//是否捕获点击事件
             }
@@ -404,6 +448,55 @@ public class MapActivity extends AppCompatActivity {
                         break;
 
 
+                    case CHECK_INFO:
+                        InfoWindow mInfoWindow = null;
+
+//用来构造InfoWindow的Button
+                        Button button = new Button(getApplicationContext());
+                        button.setBackgroundResource(R.mipmap.rectangle_popup);
+                        button.setText(marker.getExtraInfo().getString("name"));
+//构造InfoWindow
+//point 描述的位置点
+//-100 InfoWindow相对于point在y轴的偏移量
+                        mInfoWindow = new InfoWindow(button, marker.getPosition(), -100);
+
+//使InfoWindow生效
+                        mBaiduMap.showInfoWindow(mInfoWindow);
+
+                        button.setOnClickListener(new View.OnClickListener(
+                        ) {
+                            @Override
+                            public void onClick(View v) {
+                                //吧按钮删除
+                                ((ViewGroup)button.getParent()).removeView(button);
+                            }
+                        });
+
+
+
+//                        InfoWindow mInfoWindow = null;
+//                        //用来构造InfoWindow
+//                        BitmapDescriptor mBitmap = BitmapDescriptorFactory.fromResource(R.mipmap.popup);
+//
+////响应点击的OnInfoWindowClickListener
+//                        InfoWindow.OnInfoWindowClickListener listener = new InfoWindow.OnInfoWindowClickListener() {
+//                            @Override
+//                            public void onInfoWindowClick() {
+//                                Toast.makeText(mMapActivityRef.get(), "Click on InfoWindow", Toast.LENGTH_LONG).show();
+//
+//                            }
+//                        };
+//
+////构造InfoWindow
+////point 描述的位置点
+////-100 InfoWindow相对于point在y轴的偏移量
+//
+//                         mInfoWindow = new InfoWindow(mBitmap, marker.getPosition(), -100, listener);
+//                        mInfoWindow.setTag(marker.getTitle());
+////使InfoWindow生效
+//                        mBaiduMap.showInfoWindow(mInfoWindow);
+
+                        break;
                     case ADD_BUSROUTE:
                         //TODO()  添加路径事件
                         OverlayOptions mTextOptions = new TextOptions()

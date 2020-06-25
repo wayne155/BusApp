@@ -37,10 +37,8 @@ fun<T> Boolean.no(block: ()->T):BooleanExt<T>{
 }
 
 fun<T> BooleanExt<T>.otherwise(block: ()->T):T{
-
     return when(this){  //when this时kotlin 会把this自动转换类型
         is Otherwise -> block()//代表为假
         is WithData -> this.data //为真otherwise什么也不干
     }
-
 }

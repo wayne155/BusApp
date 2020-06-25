@@ -150,6 +150,13 @@ class UserLoginActivity : AppCompatActivity() {
             }
 
         }
+
+
+        isAdminText.setOnClickListener {
+
+            val intent = Intent(this , AdminLoginActivity::class.java)
+            startActivity(intent)
+        }
     }
 
 

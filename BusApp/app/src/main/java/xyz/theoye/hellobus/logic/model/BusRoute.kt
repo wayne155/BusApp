@@ -1,4 +1,4 @@
-import xyz.theoye.hellobus.logic.model.BusStation
+package xyz.theoye.hellobus.logic.model
 
 
-data class BusRoute( val name ,val route:List<BusStation>);
+data class BusRoute( val name:String,val route:List<BusStation>)
