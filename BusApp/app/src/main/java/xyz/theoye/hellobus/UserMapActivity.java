@@ -1,74 +1,65 @@
 package xyz.theoye.hellobus;
 
-        import android.app.Activity;
-        import android.app.AlertDialog;
-        import android.content.Context;
-        import android.content.DialogInterface;
-        import android.graphics.Bitmap;
-        import android.graphics.Canvas;
-        import android.graphics.Color;
-        import android.graphics.drawable.Drawable;
-        import android.os.Bundle;
-        import android.text.Layout;
-        import android.util.Log;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.view.inputmethod.InputMethodManager;
-        import android.widget.Button;
-        import android.widget.EditText;
-        import android.widget.LinearLayout;
-        import android.widget.TextView;
-        import android.widget.Toast;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
-        import androidx.annotation.ColorInt;
-        import androidx.annotation.DrawableRes;
-        import androidx.annotation.NonNull;
-        import androidx.annotation.Nullable;
-        import androidx.appcompat.app.AppCompatActivity;
-        import androidx.core.content.res.ResourcesCompat;
-        import androidx.core.graphics.drawable.DrawableCompat;
-        import androidx.core.view.GravityCompat;
-        import androidx.drawerlayout.widget.DrawerLayout;
-        import androidx.lifecycle.Observer;
-        import androidx.lifecycle.ViewModelProviders;
-        import xyz.theoye.hellobus.Settings;
-        import com.baidu.location.BDAbstractLocationListener;
-        import com.baidu.location.BDLocation;
-        import com.baidu.location.LocationClient;
-        import com.baidu.location.LocationClientOption;
-        import com.baidu.mapapi.CoordType;
-        import com.baidu.mapapi.SDKInitializer;
-        import com.baidu.mapapi.map.BaiduMap;
-        import com.baidu.mapapi.map.BitmapDescriptor;
-        import com.baidu.mapapi.map.BitmapDescriptorFactory;
-        import com.baidu.mapapi.map.InfoWindow;
-        import com.baidu.mapapi.map.MapPoi;
-        import com.baidu.mapapi.map.MapView;
-        import com.baidu.mapapi.map.Marker;
-        import com.baidu.mapapi.map.MarkerOptions;
-        import com.baidu.mapapi.map.Overlay;
-        import com.baidu.mapapi.map.OverlayOptions;
-        import com.baidu.mapapi.map.Polyline;
-        import com.baidu.mapapi.map.PolylineOptions;
-        import com.baidu.mapapi.map.TextOptions;
-        import com.baidu.mapapi.model.LatLng;
-        import com.google.gson.Gson;
-        import com.google.gson.reflect.TypeToken;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
-        import java.lang.ref.WeakReference;
-        import java.lang.reflect.Array;
-        import java.lang.reflect.Type;
-        import java.util.ArrayList;
-        import java.util.List;
-        import java.util.Random;
-        import java.util.Set;
+import com.baidu.location.BDAbstractLocationListener;
+import com.baidu.location.BDLocation;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.CoordType;
+import com.baidu.mapapi.SDKInitializer;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.InfoWindow;
+import com.baidu.mapapi.map.MapPoi;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Marker;
+import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.MyLocationConfiguration;
+import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.Overlay;
+import com.baidu.mapapi.map.OverlayOptions;
+import com.baidu.mapapi.map.Polyline;
+import com.baidu.mapapi.map.PolylineOptions;
+import com.baidu.mapapi.map.TextOptions;
+import com.baidu.mapapi.model.LatLng;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-        import xyz.theoye.hellobus.Util.MyLocationListener;
-        import xyz.theoye.hellobus.logic.model.BusRoute;
-        import xyz.theoye.hellobus.logic.model.BusStation;
-        import xyz.theoye.hellobus.ui.map.MapViewModel;
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
-public class MapActivity extends AppCompatActivity {
+import xyz.theoye.hellobus.logic.model.BusRoute;
+import xyz.theoye.hellobus.logic.model.BusStation;
+import xyz.theoye.hellobus.ui.map.MapViewModel;
+import xyz.theoye.hellobus.ui.map.UserMapViewModel;
+
+public class UserMapActivity extends AppCompatActivity {
 
 
     private static WeakReference<Activity> mMapActivityRef;
@@ -76,7 +67,7 @@ public class MapActivity extends AppCompatActivity {
     public WeakReference<Activity> getMapActivityRef(){return mMapActivityRef;}
 
     /***百度地图API所需变量***/
-    public  MapViewModel viewModel = null;  //地图viewModel
+    public  UserMapViewModel viewModel = null;  //地图viewModel
     private MapView mMapView = null;
     public    BaiduMap mBaiduMap = null;
 
@@ -116,7 +107,7 @@ public class MapActivity extends AppCompatActivity {
         setContentView(R.layout.activity_map);
 
         //获得viewModel
-        viewModel = ViewModelProviders.of(this).get(MapViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(UserMapViewModel.class);
 
         Button showMarker = findViewById(R.id.showMarker);
         LinearLayout nameEditLayout= findViewById(R.id.nameEditLayout);
@@ -125,10 +116,11 @@ public class MapActivity extends AppCompatActivity {
         Button deleteButton = findViewById(R.id.delBtn);
         EditText editText = findViewById(R.id.editName);
         Button finishEditButton = findViewById(R.id.finishEditButton);
+        Button navBtn = findViewById(R.id.navBtn);
 
         TextView editTextView = findViewById(R.id.editTextView);
-
-        MapActivity.updateActivity(this);
+        LinearLayout adminArea = findViewById(R.id.adminArea);
+        UserMapActivity.updateActivity(this);
 
 
 
@@ -144,11 +136,18 @@ public class MapActivity extends AppCompatActivity {
         mMapView = (MapView) findViewById(R.id.bmapView);
         mBaiduMap = mMapView.getMap();
         //显示卫星图层
-        mBaiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
+        mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
         mBaiduMap.showMapPoi(viewModel.getShowMarker().getValue());  //隐藏标注信息
 
+        //开启地图定位
+        mBaiduMap.setMyLocationEnabled(true);
 
-
+        //**********设置区域不可见***************
+//        adminArea.setVisibility(View.GONE);
+        navBtn.setVisibility(View.GONE);
+        addStation.setVisibility(View.GONE);
+        addRoute.setVisibility(View.GONE);
+        deleteButton.setVisibility(View.GONE);
 
         //****************获得保存的公交站点位置和路线*****************
         Type busStationListType = new TypeToken<ArrayList<BusStation>>(){}.getType();
@@ -164,9 +163,35 @@ public class MapActivity extends AppCompatActivity {
         drawBusStations(busStations);
         //绘制公交路线
         drawBusRoutes(busRoutes);
-        //TODO()
+        //TODO() 发起定位
+
+        //定位初始化
+        mLocationClient = new LocationClient(this);
+
+//通过LocationClientOption设置LocationClient相关参数
+        LocationClientOption option = new LocationClientOption();
+        option.setOpenGps(true); // 打开gps
+        option.setCoorType("bd09ll"); // 设置坐标类型
+        option.setScanSpan(1000);
+
+//设置locationClientOption
+        mLocationClient.setLocOption(option);
+//配置样式
+        MyLocationConfiguration mLocationConfiguration= new  MyLocationConfiguration(MyLocationConfiguration.LocationMode.FOLLOWING,
+                true,
+                null,
+                0xAAFFFF88,
+                0xAA00FF00);
+//注册LocationListener监听器
+        MyLocationListener myLocationListener = new MyLocationListener();
+        mBaiduMap.setMyLocationConfiguration(mLocationConfiguration);
+        mLocationClient.registerLocationListener(myLocationListener);
+//开启地图定位图层
+        mLocationClient.start();
+
+
+
         //注册点击事件
-        Button navBtn = findViewById(R.id.navBtn);
         DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
         navBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -369,7 +394,7 @@ public class MapActivity extends AppCompatActivity {
 
 //用来构造InfoWindow的Button
                         Button button = new Button(getApplicationContext());
-                        button.setBackgroundResource(R.mipmap.rectangle_popup);
+                        button.setBackgroundResource(R.mipmap.popup1);
                         button.setText(polyline.getExtraInfo().getString("name"));
 //构造InfoWindow
 //point 描述的位置点
@@ -543,7 +568,7 @@ public class MapActivity extends AppCompatActivity {
             @Override
             public void onMapClick(LatLng point) {
 
-
+                mBaiduMap.hideInfoWindow();
                 switch (viewModel.getEditState().getValue()){
                     case ADD_STATION:
                         if(editText.getText().toString().equals("")){
@@ -707,9 +732,11 @@ public class MapActivity extends AppCompatActivity {
     }
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-        //在activity执行onDestroy时必须调用mMapView.onDestroy()
+        mLocationClient.stop();
+        mBaiduMap.setMyLocationEnabled(false);
         mMapView.onDestroy();
+        mMapView = null;
+        super.onDestroy();
     }
 
 
@@ -721,41 +748,50 @@ public class MapActivity extends AppCompatActivity {
             //以下只列举部分获取地址相关的结果信息
             //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
 
-
-
-            Toast.makeText(getApplicationContext(), "clicked", Toast.LENGTH_SHORT).show();
-            if(editState == EditState.ADD_STATION){
-//                    String msg = "是否在"+mapPoi.getName()+"处"+"添加站点"+editText.getText().toString()+"?";
-
-                // Use the Builder class for convenient dialog construction
-                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-                builder.setMessage("")
-                        .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                //确认添加
-//                                    addBusStation(mapPoi);
-                            }
-                        })
-                        .setNegativeButton(R.string.cancle, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                //取消添加
-                            }
-                        });
-                // Create the AlertDialog object and return it
-                builder.create();
+            //mapView 销毁后不在处理新接收的位置
+            if (location == null || mMapView == null){
+                return;
             }
+            MyLocationData locData = new MyLocationData.Builder()
+                    .accuracy(location.getRadius())
+                    // 此处设置开发者获取到的方向信息，顺时针0-360
+                    .direction(location.getDirection()).latitude(location.getLatitude())
+                    .longitude(location.getLongitude()).build();
+            mBaiduMap.setMyLocationData(locData);
 
-
-
-
-            String addr = location.getAddrStr();    //获取详细地址信息
-            String country = location.getCountry();    //获取国家
-            String province = location.getProvince();    //获取省份
-            String city = location.getCity();    //获取城市
-            String district = location.getDistrict();    //获取区县
-            String street = location.getStreet();    //获取街道信息
-            String adcode = location.getAdCode();    //获取adcode
-            String town = location.getTown();    //获取乡镇信息
+//            Toast.makeText(getApplicationContext(), "clicked", Toast.LENGTH_SHORT).show();
+//            if(editState == EditState.ADD_STATION){
+////                    String msg = "是否在"+mapPoi.getName()+"处"+"添加站点"+editText.getText().toString()+"?";
+//
+//                // Use the Builder class for convenient dialog construction
+//                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+//                builder.setMessage("")
+//                        .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int id) {
+//                                //确认添加
+////                                    addBusStation(mapPoi);
+//                            }
+//                        })
+//                        .setNegativeButton(R.string.cancle, new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int id) {
+//                                //取消添加
+//                            }
+//                        });
+//                // Create the AlertDialog object and return it
+//                builder.create();
+//            }
+//
+//
+//
+//
+//            String addr = location.getAddrStr();    //获取详细地址信息
+//            String country = location.getCountry();    //获取国家
+//            String province = location.getProvince();    //获取省份
+//            String city = location.getCity();    //获取城市
+//            String district = location.getDistrict();    //获取区县
+//            String street = location.getStreet();    //获取街道信息
+//            String adcode = location.getAdCode();    //获取adcode
+//            String town = location.getTown();    //获取乡镇信息
         }
     }
 

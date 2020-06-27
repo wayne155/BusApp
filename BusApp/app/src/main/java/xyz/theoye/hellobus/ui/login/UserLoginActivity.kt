@@ -1,40 +1,29 @@
 package xyz.theoye.hellobus.ui.login
 
 import android.content.Intent
-import android.media.Image
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
-import android.widget.Button
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.Dispatchers
 import xyz.theoye.common.CodeGenerator
-import xyz.theoye.hellobus.BusApp
-import xyz.theoye.hellobus.MapActivity
-import xyz.theoye.hellobus.R
-import xyz.theoye.hellobus.logic.model.UserLoginViewModel
 import xyz.theoye.hellobus.logic.model.VerifyCodeRequest
 import xyz.theoye.hellobus.logic.model.VerifyCodeResponse
 import xyz.theoye.hellobus.logic.network.BusAppNetwork
 import java.lang.Exception
-import androidx.lifecycle.LiveData
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import retrofit2.Response
-import xyz.theoye.hellobus.Settings
+import xyz.theoye.hellobus.*
 import java.lang.RuntimeException
 import java.net.URLEncoder
 
 class UserLoginActivity : AppCompatActivity() {
 
-    lateinit  var viewModel:UserLoginViewModel   //viewModel
+    lateinit  var viewModel: UserLoginViewModel   //viewModel
 
     
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,8 +43,10 @@ class UserLoginActivity : AppCompatActivity() {
 
             if(verifyCodeText.text.toString().equals(Settings.verifyCode)){
                 Toast.makeText(this, "登陆成功", Toast.LENGTH_LONG).show()
-                val i = Intent(this, MapActivity::class.java)
+                val i = Intent(this, UserMapActivity::class.java)
                 startActivity(i)
+            }else{
+                showToast("验证码错误")
             }
         }
 
@@ -116,27 +107,21 @@ class UserLoginActivity : AppCompatActivity() {
                 //协程调用
                 GlobalScope.launch{
                     val result = try {
-                        Log.d("UserLoginActivity", "jsondata:$jsondata"+"phone:" +phoneText.text+ "content: $content")
                         val verifyCodeResponse= BusAppNetwork.requestVerifycode(verifyCodeRequest)
 
                         if(verifyCodeResponse.result.equals("0")){
                             //验证码发送成功, 存储起来
-                            Log.d("UserLoginActivity", "code:$verifyCode"+"coded:"+URLEncoder.encode("验证码：$verifyCode，打死都不要告诉别人哦！", "GBK"))
-                            Log.d("UserLoginActivity", "verifyCodeResponse:${verifyCodeResponse.result}")
 
                             Settings.verifyCode = verifyCode.toString() //存储验证码
-
-                            Log.d("UserLoginActivity", "verifycode:$verifyCode Settings.verifyCode:"+Settings.verifyCode)
-
-
                             Result.success(verifyCode)
                         }else{
-                            Log.d("UserLoginActivity", "wrogn :code:${verifyCodeResponse.result}")
+                            showToast("登陆失败,请检查输入信息");
                             Result.failure<Any>(RuntimeException("response result is ${verifyCodeResponse.result}"))
                         }
                     }catch (e: Exception){
                         Result.failure<VerifyCodeResponse>(e)
-                        Log.d("UserLoginActivity", "Failure::")
+                        showToast("服务器响应错误");
+
                         e.printStackTrace()
                     }
 
@@ -153,12 +138,17 @@ class UserLoginActivity : AppCompatActivity() {
 
 
         isAdminText.setOnClickListener {
-
             val intent = Intent(this , AdminLoginActivity::class.java)
             startActivity(intent)
         }
     }
 
+
+    fun showToast(msg:String ){
+        runOnUiThread{
+            Toast.makeText(this@UserLoginActivity, msg, Toast.LENGTH_LONG).show();
+        }
+    }
 
 
 

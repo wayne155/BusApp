@@ -4,22 +4,23 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.baidu.mapsdkplatform.comapi.map.v
 import xyz.theoye.hellobus.MapActivity
+import xyz.theoye.hellobus.UserMapActivity
 import xyz.theoye.hellobus.logic.model.BusStation
 import xyz.theoye.hellobus.logic.model.Location
 
-class MapViewModel :ViewModel(){
+class UserMapViewModel :ViewModel(){
 
 
     var showMarker:MutableLiveData<Boolean> = MutableLiveData(true)
 
-    var editState:MutableLiveData<MapActivity.EditState> = MutableLiveData(MapActivity.EditState.NOTHING)
+    var editState:MutableLiveData<UserMapActivity.EditState> = MutableLiveData(UserMapActivity.EditState.NOTHING)
 
 
     fun toggltShowMarker(){
         showMarker.value = !showMarker.value!!
     }
 
-    fun setEditState(state : MapActivity.EditState){
+    fun setEditState(state : UserMapActivity.EditState){
         editState.value = state
     }
 

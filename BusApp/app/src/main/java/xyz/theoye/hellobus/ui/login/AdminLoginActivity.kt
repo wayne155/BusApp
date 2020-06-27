@@ -28,8 +28,6 @@ class AdminLoginActivity :AppCompatActivity(){
         setContentView(R.layout.activity_login);  //设置管理员登陆
 
 
-
-
         //注册登陆事件
         adminLoginButton.setOnClickListener {
 
